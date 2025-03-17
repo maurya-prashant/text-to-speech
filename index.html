@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Catalyst</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>Code Catalyst</h1>
+    
+    <main>
+        <p>This website is designed to show the version of AI voice clone, which can be used as text to speech </p>
+        <h2>select the voice</h2>
+        <div class="center-container">
+            <select id="voice-select"></select>
+            <textarea id="text-input" rows="4" cols="50" placeholder="Enter text here..."></textarea>
+        </div>
+        <button id="speak-button">Speak</button>
+    </main>
+
+    <script>
+        const voiceSelect = document.getElementById('voice-select');
+        let voices = [];
+
+        function populateVoiceList() {
+            voices = window.speechSynthesis.getVoices();
+            voices.forEach((voice) => {
+                const option = document.createElement('option');
+                option.value = voice.name;
+                option.textContent = `${voice.name} (${voice.lang})`;
+                voiceSelect.appendChild(option);
+            });
+        }
+
+        window.speechSynthesis.onvoiceschanged = populateVoiceList;
+
+        document.getElementById('speak-button').addEventListener('click', function() {
+            const textInput = document.getElementById('text-input').value;
+            const speech = new SpeechSynthesisUtterance(textInput);
+            const selectedVoice = voiceSelect.value;
+            speech.voice = voices.find(voice => voice.name === selectedVoice);
+            window.speechSynthesis.speak(speech);
+        });
+    </script>
+</body>
+</html>
